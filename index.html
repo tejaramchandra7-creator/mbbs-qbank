@@ -64,7 +64,28 @@ button{border:0;border-radius:10px;padding:12px 16px;font-size:15px;margin:5px;c
 
 </div>
 </div>
+<!-- REVISION NOTES -->
+<div id="notes" class="hidden">
 
+<button class="secondary back" onclick="goHome()">
+← Back
+</button>
+
+<h2>📚 Revision Notes</h2>
+
+<p>Select a year:</p>
+
+<div class="topic">
+
+<h3>🎓 Final Year MBBS</h3>
+
+<button class="primary" onclick="openMedicineNotes()">
+🩺 General Medicine
+</button>
+
+</div>
+
+</div>
 <!-- MEDICINE -->
 <div id="medicine" class="hidden">
 
@@ -226,6 +247,20 @@ rows="5"></textarea>
 
   </div>
 <script>
+  function openNotes(){
+
+document.getElementById("home").classList.add("hidden");
+document.getElementById("notes").classList.remove("hidden");
+
+window.scrollTo(0,0);
+
+}
+
+function openMedicineNotes(){
+
+alert("General Medicine Notes coming next!");
+
+}
 function openMedicine(){
 document.getElementById("home").classList.add("hidden");
 document.getElementById("medicine").classList.remove("hidden");

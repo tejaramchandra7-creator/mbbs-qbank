@@ -125,7 +125,9 @@ button{border:0;border-radius:10px;padding:12px 16px;font-size:15px;margin:5px;c
 <button class="secondary" onclick="backToMedicine()">← Back</button>
 
 <h2>❓ Cardiology QBank</h2>
-
+<button class="primary" onclick="openAddQuestion()">
+➕ Add Question
+</button>
 <div class="topic">
 <h3 id="question">Question</h3>
 
@@ -142,7 +144,87 @@ Next →
 <div id="score"></div>
 
 </div>
-  
+  <!-- ADD QUESTION -->
+<div id="addQuestion" class="hidden">
+
+<button class="secondary" onclick="closeAddQuestion()">
+← Back
+</button>
+
+<h2>➕ Add Question</h2>
+
+<div class="topic">
+
+<label>Question</label>
+
+<textarea
+id="newQuestion"
+placeholder="Enter your question..."
+style="width:100%;padding:12px;margin:8px 0 15px;border-radius:10px;border:1px solid #ddd;font-size:16px"
+rows="4"></textarea>
+
+<label>Option A</label>
+
+<input
+id="optionA"
+placeholder="Option A"
+style="width:100%;padding:12px;margin:8px 0"
+>
+
+<label>Option B</label>
+
+<input
+id="optionB"
+placeholder="Option B"
+style="width:100%;padding:12px;margin:8px 0"
+>
+
+<label>Option C</label>
+
+<input
+id="optionC"
+placeholder="Option C"
+style="width:100%;padding:12px;margin:8px 0"
+>
+
+<label>Option D</label>
+
+<input
+id="optionD"
+placeholder="Option D"
+style="width:100%;padding:12px;margin:8px 0"
+>
+
+<label>Correct Answer</label>
+
+<select
+id="correctAnswer"
+style="width:100%;padding:12px;margin:8px 0 15px;font-size:16px">
+
+<option value="0">A</option>
+<option value="1">B</option>
+<option value="2">C</option>
+<option value="3">D</option>
+
+</select>
+
+<label>Explanation</label>
+
+<textarea
+id="newExplanation"
+placeholder="Enter explanation..."
+style="width:100%;padding:12px;margin:8px 0 15px;border-radius:10px;border:1px solid #ddd;font-size:16px"
+rows="5"></textarea>
+
+<button class="primary" onclick="saveQuestion()">
+💾 Save Question
+</button>
+
+<p id="saveMessage"></p>
+
+</div>
+
+  </div>
 <script>
 function openMedicine(){
 document.getElementById("home").classList.add("hidden");
@@ -162,7 +244,7 @@ document.querySelectorAll(".subject").forEach(x=>{
 x.style.display=x.innerText.toLowerCase().includes(value)?"block":"none";
 });
 }
-const questions = [
+let questions = [
   {
     question: "Most common cause of acute myocardial infarction is:",
     options: [
@@ -189,6 +271,10 @@ const questions = [
       "Cardiac troponins are highly sensitive and specific biomarkers of myocardial injury."
   }
 ];
+  const savedQuestions =
+  JSON.parse(localStorage.getItem("mbbsQuestions") || "[]");
+
+questions = questions.concat(savedQuestions);
 
 let currentQuestion = 0;
 let scoreCount = 0;
@@ -306,7 +392,114 @@ function backToMedicine() {
   document.getElementById("medicine").classList.remove("hidden");
 
   window.scrollTo(0, 0);
-}</script>
+}
+function openAddQuestion() {
+
+  document.getElementById("quiz").classList.add("hidden");
+
+  document.getElementById("addQuestion").classList.remove("hidden");
+
+  window.scrollTo(0, 0);
+}
+
+
+function closeAddQuestion() {
+
+  document.getElementById("addQuestion").classList.add("hidden");
+
+  document.getElementById("quiz").classList.remove("hidden");
+
+  window.scrollTo(0, 0);
+}
+
+
+function saveQuestion() {
+
+  const question =
+    document.getElementById("newQuestion").value.trim();
+
+  const optionA =
+    document.getElementById("optionA").value.trim();
+
+  const optionB =
+    document.getElementById("optionB").value.trim();
+
+  const optionC =
+    document.getElementById("optionC").value.trim();
+
+  const optionD =
+    document.getElementById("optionD").value.trim();
+
+  const answer =
+    Number(document.getElementById("correctAnswer").value);
+
+  const explanation =
+    document.getElementById("newExplanation").value.trim();
+
+
+  if (
+    !question ||
+    !optionA ||
+    !optionB ||
+    !optionC ||
+    !optionD ||
+    !explanation
+  ) {
+
+    document.getElementById("saveMessage").innerText =
+      "⚠️ Please fill all fields.";
+
+    return;
+  }
+
+
+  const newQuestion = {
+
+    question: question,
+
+    options: [
+      optionA,
+      optionB,
+      optionC,
+      optionD
+    ],
+
+    answer: answer,
+
+    explanation: explanation
+  };
+
+
+questions.push(newQuestion);
+
+const savedUserQuestions =
+  JSON.parse(localStorage.getItem("mbbsQuestions") || "[]");
+
+savedUserQuestions.push(newQuestion);
+
+localStorage.setItem(
+  "mbbsQuestions",
+  JSON.stringify(savedUserQuestions)
+);
+
+
+  document.getElementById("saveMessage").innerText =
+    "✅ Question saved successfully!";
+
+
+  document.getElementById("newQuestion").value = "";
+
+  document.getElementById("optionA").value = "";
+
+  document.getElementById("optionB").value = "";
+
+  document.getElementById("optionC").value = "";
+
+  document.getElementById("optionD").value = "";
+
+  document.getElementById("newExplanation").value = "";
+}
+</script>
 
 </body>
 </html>
